@@ -1,0 +1,23 @@
+- type: entity
+  parent: Paper
+  id: PrintedDocument
+  abstract: true
+  description: Bureaucratic unit. A document printed on a printer.
+  components:
+    - type: Paper
+
+- type: entity
+  parent: PrintedDocument
+  id: PrintedDocumentReportSta
+  name: Report on the situation at the sta
+  components:
+    - type: Paper
+      content: doc-text-printer-report-sta
+
+# - type: entity
+#   parent: PrintedDocument
+#   id: PrintedDocumentSECSentence
+#   name: Sentence
+#   components:
+#     - type: Paper
+#       content: doc-text-printer-SEC-sentence

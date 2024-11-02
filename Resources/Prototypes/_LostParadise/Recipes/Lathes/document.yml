@@ -1,0 +1,13 @@
+- type: latheRecipe
+  id: PrintedDocumentReportStaRecipe
+  result: PrintedDocumentReportSta
+  category: Reports
+  completetime: 2
+  applyMaterialDiscount: true
+
+  # - type: latheRecipe
+  # id: PrintedDocumentReportStaRecipe
+  # result: PrintedDocumentReportSta
+  # category: Reports
+  # completetime: 2
+  # applyMaterialDiscount: true

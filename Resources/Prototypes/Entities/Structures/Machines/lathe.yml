@@ -440,6 +440,7 @@
     - SodaDispenserMachineCircuitboard
     - DeepFryerMachineCircuitboard #Nyano - Summary: adds deep fryer circuit board
     - SpaceHeaterMachineCircuitBoard
+    - PrinterDocMachineCircuitboard
     dynamicRecipes:
       - LPPResearchAndDevelopmentServerMachineCircuitboard
       - LPPAdvResearchAndDevelopmentPointSourceCircuitBoard

@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Content.Server.Administration.Logs;
 using Content.Server.Atmos;
 using Content.Server.Atmos.EntitySystems;
@@ -8,6 +9,10 @@ using Content.Server.Materials;
 using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
 using Content.Server.Stack;
+using Content.Server.Paper;
+using Content.Server.GameTicking;
+using Content.Server.PrinterSystem;
+using Content.Server.Station.Systems;
 using Content.Shared.UserInterface;
 using Content.Shared.Database;
 using Content.Shared.Emag.Components;
@@ -36,6 +41,11 @@ namespace Content.Server.Lathe
         [Dependency] private readonly MaterialStorageSystem _materialStorage = default!;
         [Dependency] private readonly StackSystem _stack = default!;
         [Dependency] private readonly TransformSystem _transform = default!;
+        [Dependency] private readonly StationSystem _station = default!;
+        [Dependency] private readonly IGameTiming _gameTiming = default!;
+        [Dependency] private readonly GameTicker _gameTicker = default!;
+
+        private static readonly Regex StationIdRegex = new(@".*-(\d+)$");
 
         /// <summary>
         /// Per-tick cache
@@ -208,6 +218,13 @@ namespace Content.Server.Lathe
             {
                 var result = Spawn(comp.CurrentRecipe.Result, Transform(uid).Coordinates);
                 _stack.TryMergeToContacts(result);
+                /// Start _LostParadise
+                if (TryComp<PaperComponent>(result, out var paperComp))
+                {
+                    var printer = new Printer();
+                    printer.FillPaperData(paperComp, uid);
+                }
+                /// End _LostParadise
             }
 
             comp.CurrentRecipe = null;
@@ -220,6 +237,53 @@ namespace Content.Server.Lathe
                 UpdateRunningAppearance(uid, false);
             }
         }
+
+        // private void FillPaperData(PaperComponent paperComp, EntityUid entityUid)
+        // {
+        //     string stationName = GetStationName(entityUid);
+        //     string stationNumber = GetStationNumber(entityUid);
+        //     string shiftTime = GetShiftDuration();
+        //     string currentDate = DateTime.Now.AddYears(544).ToString("dd MMMM yyyy");
+
+        //     paperComp.Content = paperComp.Content
+        //         .Replace("{stationName}", stationName)
+        //         .Replace("{stationNumber}", stationNumber)
+        //         .Replace("{shiftTime}", shiftTime)
+        //         .Replace("{currentDate}", currentDate);
+
+        //     Dirty(paperComp);
+        // }
+
+        // private string GetStationName(EntityUid entityUid)
+        // {
+        //     var stationId = _station.GetOwningStation(entityUid);
+
+        //     if (stationId != null && TryComp<MetaDataComponent>(stationId, out var meta))
+        //     {
+        //         return meta.EntityName;
+        //     }
+
+        //     return "Неизвестная станция";
+        // }
+
+        // private string GetStationNumber(EntityUid entityUid)
+        // {
+        //     var stationId = _station.GetOwningStation(entityUid);
+
+        //     if (stationId != null && TryComp<MetaDataComponent>(stationId, out var meta))
+        //     {
+        //         var match = StationIdRegex.Match(meta.EntityName);
+        //         return match.Success ? match.Groups[1].Value : "XXX-???";
+        //     }
+
+        //     return "XXX-???";
+        // }
+        // private string GetShiftDuration()
+        // {
+        //     var stationTime = _gameTiming.CurTime.Subtract(_gameTicker.RoundStartTimeSpan);
+
+        //     return stationTime.ToString(@"hh\:mm\:ss");
+        // }
 
         public void UpdateUserInterfaceState(EntityUid uid, LatheComponent? component = null)
         {
