@@ -1,0 +1,278 @@
+- type: entity
+  name: Базовый малыш блёба
+  id: LPPMobBabySlime
+  parent: [ SimpleMobBase, MobCombat ]
+  abstract: true
+  description: Он выглядит крайне маленьким и милым!
+  components:
+  - type: NpcFactionMember
+    factions:
+    - SimpleNeutral
+  - type: HTN
+    rootTask:
+      task: SimpleHostileCompound
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _LostParadise/Xenobio/slimes.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: grey_baby_slime
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.15
+        density: 80
+        mask:
+        - MobMask
+        layer:
+        - MobLayer
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      50: Dead
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 1
+    baseSprintSpeed: 2
+  - type: FootstepModifier
+    footstepSoundCollection:
+      path: /Audio/Effects/Footsteps/slime1.ogg
+      params:
+        volume: 3
+  - type: Tag
+    tags:
+    - FootstepSound
+    - DoorBumpOpener
+  - type: Butcherable
+    butcheringType: Knife
+    spawned:
+    - id: FoodMeatSlime
+      amount: 1
+  - type: Respirator
+    damage:
+      types:
+        Asphyxiation: 0.2
+    damageRecovery:
+      types:
+        Asphyxiation: -1.0
+    maxSaturation: 15
+  - type: Damageable
+    damageContainer: Biological
+    damageModifierSet: Slime
+  - type: Bloodstream
+    bloodReagent: Slime
+    bloodlossDamage:
+      types:
+        Bloodloss:
+          0.5
+    bloodlossHealDamage:
+      types:
+        Bloodloss:
+          -0.25
+  - type: Barotrauma
+    damage:
+      types:
+        Blunt: 0.45
+  - type: Reactive
+    groups:
+      Flammable: [ Touch ]
+      Extinguish: [ Touch ]
+    reactions:
+    - reagents: [ Water, SpaceCleaner ]
+      methods: [ Touch ]
+      effects:
+      - !type:WashCreamPieReaction
+    - reagents: [ Water ]
+      methods: [ Touch ]
+      effects:
+      - !type:HealthChange
+        scaleByQuantity: true
+        damage:
+          types:
+            Heat: 3
+      - !type:PopupMessage
+        type: Local
+        messages: [ "slime-hurt-by-water-popup" ]
+        probability: 0.25
+  - type: Body
+    prototype: Slimes
+    requiredLegs: 1
+  - type: MeleeWeapon
+    soundHit:
+        path: /Audio/Weapons/punch3.ogg
+    angle: 0
+    animation: WeaponArcPunch
+    damage:
+      types:
+        Blunt: 3
+        Structural: 2
+        Caustic: 2
+  - type: InteractionPopup
+    successChance: 0.5
+    interactSuccessString: petting-success-slimes
+    interactFailureString: petting-failure-generic
+  - type: LanguageKnowledge
+    speaks:
+    - Bubblish
+    understands:
+    - Bubblish
+  - type: Speech
+    speechVerb: Slime
+    speechSounds: Slime
+  - type: TypingIndicator
+    proto: slime
+  - type: TTS # Corvax-TTS
+    voice: Astral
+
+- type: entity
+  name: Серый малыш блёба
+  id: LPPMobBabySlimeGrey
+  parent: LPPMobBabySlime
+  components:
+  - type: Content.Server.Xenobiology.SlimeAttachmentComponent
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: grey_baby_slime
+      Dead:
+        Base: grey_slime_dead
+
+- type: entity
+  name: Базовый слайм
+  id: LPPMobAdultSlime
+  parent: [ SimpleMobBase, MobCombat ]
+  abstract: true
+  description: Он похож на желешку! Его так и хочется затискать!
+  components:
+  - type: NpcFactionMember
+    factions:
+    - SimpleNeutral
+  - type: HTN
+    rootTask:
+      task: SimpleHostileCompound
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _LostParadise/Xenobio/slimes.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: blue_adult_slime
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.30
+        density: 80
+        mask:
+        - MobMask
+        layer:
+        - MobLayer
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      120: Dead
+  - type: MovementSpeedModifier
+    baseWalkSpeed: 2
+    baseSprintSpeed: 4
+  - type: FootstepModifier
+    footstepSoundCollection:
+      path: /Audio/Effects/Footsteps/slime1.ogg
+      params:
+        volume: 3
+  - type: Tag
+    tags:
+    - FootstepSound
+    - DoorBumpOpener
+  - type: Butcherable
+    butcheringType: Knife
+    spawned:
+    - id: FoodMeatSlime
+      amount: 2
+  - type: Respirator
+    damage:
+      types:
+        Asphyxiation: 0.2
+    damageRecovery:
+      types:
+        Asphyxiation: -1.0
+    maxSaturation: 15
+  - type: Damageable
+    damageContainer: Biological
+    damageModifierSet: Slime
+  - type: Bloodstream
+    bloodReagent: Slime
+    bloodlossDamage:
+      types:
+        Bloodloss:
+          0.5
+    bloodlossHealDamage:
+      types:
+        Bloodloss:
+          -0.25
+  - type: Barotrauma
+    damage:
+      types:
+        Blunt: 0.45
+  - type: Reactive
+    groups:
+      Flammable: [ Touch ]
+      Extinguish: [ Touch ]
+    reactions:
+    - reagents: [ Water, SpaceCleaner ]
+      methods: [ Touch ]
+      effects:
+      - !type:WashCreamPieReaction
+    - reagents: [ Water ]
+      methods: [ Touch ]
+      effects:
+      - !type:HealthChange
+        scaleByQuantity: true
+        damage:
+          types:
+            Heat: 3
+      - !type:PopupMessage
+        type: Local
+        messages: [ "slime-hurt-by-water-popup" ]
+        probability: 0.25
+  - type: Body
+    prototype: Slimes
+    requiredLegs: 1
+  - type: MeleeWeapon
+    soundHit:
+        path: /Audio/Weapons/punch3.ogg
+    angle: 0
+    animation: WeaponArcPunch
+    damage:
+      types:
+        Blunt: 6
+        Structural: 4
+        Caustic: 4
+  - type: InteractionPopup
+    successChance: 0.5
+    interactSuccessString: petting-success-slimes
+    interactFailureString: petting-failure-generic
+  - type: LanguageKnowledge
+    speaks:
+    - Bubblish
+    understands:
+    - Bubblish
+  - type: Speech
+    speechVerb: Slime
+    speechSounds: Slime
+  - type: TypingIndicator
+    proto: slime
+  - type: TTS # Corvax-TTS
+    voice: Astral
+
+- type: entity
+  name: Серый блёба
+  id: LPPMobAdultSlimeGrey
+  parent: LPPMobAdultSlime
+  components:
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: grey_adult_slime
+      Dead:
+        Base: grey_slime_dead
